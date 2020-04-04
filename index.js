@@ -15,6 +15,26 @@ const StateRewind = function (options) {
         }
     };
 
+    // we expose functions later to squash state history down based on a defined comparison function
+    // this is done by reducing the data to non matching, and having only the latest matching value be found
+    const squashReducer = function (compare, startIndex) {
+        return function (accumulator, currentValue, index) {
+            if (startIndex) {
+                index += startIndex;
+            }
+            let previousValue = accumulator[index - 1];
+            if (index && compare(previousValue.change, currentValue.change)) {
+                if (index <= changeIndex) { // adjust the change index to match the meet the new order
+                    changeIndex--;
+                }
+                log('squashing index', index, ' from: ', previousValue, ' to:', currentValue); 
+                accumulator[index - 1] = currentValue;
+                return accumulator;
+            }
+            return accumulator.concat([currentValue]);
+        }
+    };
+
     // public methods
     return {
 
@@ -74,6 +94,20 @@ const StateRewind = function (options) {
                 return;
             }
             return history.slice(0, changeIndex + 1).map(_ => _.change); // slice to ignore redos
+        },
+
+        // You may want to squash down the history based on a comparison callback, allowing you to filter out repeated similar changes
+        squash(compare) {
+            log('squash');
+            history = history.reduce(squashReducer(compare), []);
+            return this;
+        },
+
+        // Rather than squashing the enitre history, you may want to selectivly run this against the latest & previous set values only
+        squashLast(compare) {
+            const last = history.pop();
+            history = [last].reduce(squashReducer(compare, history.length), history);
+            return this;
         },
 
     };

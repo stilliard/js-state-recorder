@@ -1,6 +1,6 @@
 # JS StateRewind
 
-Simple state management with the ability to undo, redo history.
+Simple state management with the ability to undo, redo & squash history.
 
 ## Install
 
@@ -56,6 +56,23 @@ Get all recorded state changes
 state.getAll();
 ```
 
+Squash history, e.g. to remove duplicates or squash down similar objects such as changes to text, if the same elements text changes multiple times you might want to squash that down to just the latest change
+```
+state.squash(function () {
+    return a == b;
+});
+// or for an object
+state.squash(function () {
+    return a.selector == b.selector && a.type == b.type;
+});
+```
+```
+state.squashLast(function () {
+    // same compare function as above
+    return a == b;
+});
+```
+
 
 ### Example workflow
 
@@ -99,4 +116,10 @@ state.exec({
         to: 'Something else!'
     }
 }, function () { console.log('E'); }, function () { console.log('F'); });
+
+state.squashLast(function (a, b) {
+    return a.selector == b.selector && a.type == b.type;
+});
+
+state.getAll(); // should only show first and last due to the `squashLast` replacing the last 2
 ```
