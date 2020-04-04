@@ -58,21 +58,23 @@ state.getAll();
 
 Squash history, e.g. to remove duplicates or squash down similar objects such as changes to text, if the same elements text changes multiple times you might want to squash that down to just the latest change
 ```
-state.squash(function () {
-    return a == b;
+state.squash(function (prev, next) {
+    return prev == next;
 });
 // or for an object
-state.squash(function () {
-    return a.selector == b.selector && a.type == b.type;
+state.squash(function (prev, next) {
+    return prev.selector == next.selector && prev.type == next.type;
 });
 ```
+or just run squash against the last set value
 ```
-state.squashLast(function () {
+state.squashLast(function (prev, next) {
     // same compare function as above
-    return a == b;
+    return prev == next;
 });
 ```
 
+-----------------------
 
 ### Example workflow
 
@@ -117,8 +119,8 @@ state.exec({
     }
 }, function () { console.log('E'); }, function () { console.log('F'); });
 
-state.squashLast(function (a, b) {
-    return a.selector == b.selector && a.type == b.type;
+state.squashLast(function (prev, next) {
+    return prev.selector == next.selector && prev.type == next.type;
 });
 
 state.getAll(); // should only show first and last due to the `squashLast` replacing the last 2
