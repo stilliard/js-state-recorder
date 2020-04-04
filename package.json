@@ -1,0 +1,26 @@
+{
+  "name": "state-rewind",
+  "version": "0.0.1",
+  "description": "A simple way to manage state with the ability to undo & redo actions & squash down history where needed",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stilliard/js-state-rewind.git"
+  },
+  "keywords": [
+    "state",
+    "state-management",
+    "state-history",
+    "undo",
+    "redo"
+  ],
+  "author": "Andrew Stilliard <andrew.stilliard@gmail.com> (https://blog.stapps.io/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/stilliard/js-state-rewind/issues"
+  },
+  "homepage": "https://github.com/stilliard/js-state-rewind#readme"
+}
