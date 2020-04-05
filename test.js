@@ -5,13 +5,19 @@ test('simple-example', t => {
 
     const state = new StateRewind;
 
+    t.false(state.canUndo());
+    t.false(state.canRedo());
     state.set(5);
+    t.true(state.canUndo());
+    t.false(state.canRedo());
     t.is(state.get(), 5);
     state.set(10);
     t.is(state.get(), 10);
     state.set(17);
     t.is(state.get(), 17);
     state.undo();
+    t.true(state.canUndo());
+    t.true(state.canRedo());
     t.is(state.get(), 10);
     state.redo();
     t.is(state.get(), 17);

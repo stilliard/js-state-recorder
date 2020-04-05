@@ -58,30 +58,36 @@ const StateRewind = function (options) {
             return this;
         },
 
+        canUndo() {
+            return changeIndex != -1;
+        },
         undo() {
-            if (changeIndex == -1) {
+            if (! this.canUndo()) {
                 log('nothing to undo');
-                return false;
+                return this;
             }
             log('undo');
             if (typeof history[changeIndex].backward == 'function') {
                 history[changeIndex].backward();
             }
             changeIndex--;
-            return true;
+            return this;
         },
 
+        canRedo() {
+            return changeIndex != history.length - 1;
+        },
         redo() {
-            if (changeIndex == history.length - 1) {
+            if (! this.canRedo()) {
                 log('nothing to redo');
-                return false;
+                return this;
             }
             log('redo');
             changeIndex++;
             if (typeof history[changeIndex].forward == 'function') {
                 history[changeIndex].forward();
             }
-            return true;
+            return this;
         },
 
         get() {

@@ -51,6 +51,12 @@ state.undo();
 state.redo();
 ```
 
+You can also check if undo or redo are available with:
+```js
+state.canUndo(); // boolean
+state.canRedo(); // boolean
+```
+
 Get all recorded state changes
 ```js
 state.getAll();
@@ -106,7 +112,17 @@ document.addEventListener('keydown', function (e) {
 ```
 
 #### Debounce
+
 Depending on how you're saving data, if it's user based such as on input, you may want to use this with a debounce function to not save constantly, [find out more here](https://davidwalsh.name/javascript-debounce-function) or here's a package for [debounce on npm](https://www.npmjs.com/package/debounce).
+
+#### Chaining
+
+Almost all functions are chainable (except get, getAll, canUndo and canRedo).
+
+E.g.
+```js
+state.set(3).set(5).undo().get()
+```
 
 -----------------------
 
