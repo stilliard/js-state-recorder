@@ -4,32 +4,32 @@ Simple state management with the ability to undo, redo & squash history.
 
 ## Install
 
-```
+```sh
 npm install state-rewind
 ```
 
 ## Usage
 
 Init a state object
-```
+```js
 const state = new StateRewind;
 ```
 init with console logs for debug
-```
+```js
 const state = new StateRewind({ log: true });
 ```
 
 Set the state
-```
+```js
 state.set(5);
 ```
 or `exec` to run/execute a function at the same time that can later be undone or redone
-```
+```js
 state.exec(5, function () { console.log('foward'); }, function () { console.log('backward'); });
 ```
 
 State can be anything, strings, numbers, arrays, objects, anything, e.g. (works with `set` & `exec`)
-```
+```js
 state.set({
     x: "test",
     y: [1, 2, 3]
@@ -37,27 +37,27 @@ state.set({
 ```
 
 Get the current state
-```
+```js
 state.get();
 ```
 
 Undo/rewind state change
-```
+```js
 state.undo();
 ```
 
 & then redo/fast-forward current state
-```
+```js
 state.redo();
 ```
 
 Get all recorded state changes
-```
+```js
 state.getAll();
 ```
 
 Squash history, e.g. to remove duplicates or squash down similar objects such as changes to text, if the same elements text changes multiple times you might want to squash that down to just the latest change
-```
+```js
 state.squash(function (prev, next) {
     return prev == next;
 });
@@ -67,7 +67,7 @@ state.squash(function (prev, next) {
 });
 ```
 or just run squash against the last set value
-```
+```js
 state.squashLast(function (prev, next) {
     // same compare function as above
     return prev == next;
@@ -75,7 +75,7 @@ state.squashLast(function (prev, next) {
 ```
 The squash functions can both also take a 2nd callback to modify the data as it squashes down,
 e.g. if these are text changes to the same thing, you'd probably want the original "from text", but the latest "to text".
-```
+```js
 state.squashLast(function (prev, next) {
     return prev.selector == next.selector && prev.type == next.type;
 }, function (prev, next) {
@@ -92,7 +92,7 @@ Depending on how you're saving data, if it's user based such as on input, you ma
 
 E.g. here's an example where you could track changes to elements on a page with timestamps:
 
-```
+```js
 const state = new StateRewind;
 
 // first change
@@ -144,6 +144,6 @@ state.getAll(); // should only show first and last due to the `squashLast` repla
 
 ### Run tests
 
-```
+```sh
 npm test
 ```
