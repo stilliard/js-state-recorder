@@ -84,6 +84,8 @@ state.squashLast(function (prev, next) {
 });
 ```
 
+Depending on how you're saving data, if it's user based such as on input, you may want to use this with a debounce function, [find out more here](https://davidwalsh.name/javascript-debounce-function) or here's a package for [debounce on npm](https://www.npmjs.com/package/debounce).
+
 -----------------------
 
 ### Example workflow
