@@ -73,6 +73,16 @@ state.squashLast(function (prev, next) {
     return prev == next;
 });
 ```
+The squash functions can both also take a 2nd callback to modify the data as it squashes down,
+e.g. if these are text changes to the same thing, you'd probably want the original "from text", but the latest "to text".
+```
+state.squashLast(function (prev, next) {
+    return prev.selector == next.selector && prev.type == next.type;
+}, function (prev, next) {
+    next.change.from = prev.change.from; // keep the initial "from text" as we squash down to the latest "to text"
+    return next;
+});
+```
 
 -----------------------
 
@@ -124,4 +134,14 @@ state.squashLast(function (prev, next) {
 });
 
 state.getAll(); // should only show first and last due to the `squashLast` replacing the last 2
+```
+
+-----------------------
+
+## Local development
+
+### Run tests
+
+```
+npm test
 ```

@@ -17,9 +17,9 @@ const StateRewind = function (options) {
 
     // we expose functions later to squash state history down based on a defined comparison function
     // this is done by reducing the data to non matching, and having only the latest matching value be found
-    const squashReducer = function (compare, startIndex) {
+    const squashReducer = function (compare, modify, startIndex) {
         return function (accumulator, currentValue, index) {
-            if (startIndex) {
+            if (typeof startIndex != "undefined") {
                 index += startIndex;
             }
             let previousValue = accumulator[index - 1];
@@ -27,8 +27,12 @@ const StateRewind = function (options) {
                 if (index <= changeIndex) { // adjust the change index to match the meet the new order
                     changeIndex--;
                 }
+                if (typeof modify == 'function') {
+                    currentValue.change = modify(previousValue.change, currentValue.change);
+                }
                 log('squashing index', index, ' from: ', previousValue, ' to:', currentValue); 
                 accumulator[index - 1] = currentValue;
+                startIndex = (startIndex || 0) - 1;
                 return accumulator;
             }
             return accumulator.concat([currentValue]);
@@ -97,18 +101,23 @@ const StateRewind = function (options) {
         },
 
         // You may want to squash down the history based on a comparison callback, allowing you to filter out repeated similar changes
-        squash(compare) {
+        squash(compare, modify) {
             log('squash');
-            history = history.reduce(squashReducer(compare), []);
+            history = history.reduce(squashReducer(compare, modify), []);
             return this;
         },
 
         // Rather than squashing the enitre history, you may want to selectivly run this against the latest & previous set values only
-        squashLast(compare) {
+        squashLast(compare, modify) {
             const last = history.pop();
-            history = [last].reduce(squashReducer(compare, history.length), history);
+            history = [last].reduce(squashReducer(compare, modify, history.length), history);
             return this;
         },
 
     };
 };
+
+// expose to nodejs enviroment
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = StateRewind;
+}
