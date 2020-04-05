@@ -142,8 +142,16 @@ This is especially useful for setting up undo and redo buttons, e.g.
 let $undoBtn = document.querySelector('#undo-btn');
 let $redoBtn = document.querySelector('#redo-btn');
 state.onChange(function () {
-    $undoBtn.setAttribute('disabled', ! state.canUndo());
-    $redoBtn.setAttribute('disabled', ! state.canRedo());
+    $undoBtn.disabled = ! state.canUndo();
+    $redoBtn.disabled = ! state.canRedo();
+});
+$undoBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    state.undo();
+});
+$redoBtn.addEventListener('click', function (e) {
+    e.preventDefault();
+    state.redo();
 });
 ```
 
