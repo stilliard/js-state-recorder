@@ -4,7 +4,7 @@
   "description": "A simple way to manage state with the ability to undo & redo actions & squash down history where needed",
   "main": "index.js",
   "scripts": {
-    "test": "ava"
+    "test": "nyc ava"
   },
   "repository": {
     "type": "git",
@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/stilliard/js-state-rewind#readme",
   "devDependencies": {
-    "ava": "^3.5.2"
+    "ava": "^3.5.2",
+    "nyc": "^15.0.1"
   }
 }
