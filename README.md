@@ -84,7 +84,29 @@ state.squashLast(function (prev, next) {
 });
 ```
 
-Depending on how you're saving data, if it's user based such as on input, you may want to use this with a debounce function, [find out more here](https://davidwalsh.name/javascript-debounce-function) or here's a package for [debounce on npm](https://www.npmjs.com/package/debounce).
+-----------------------
+
+### Tips
+
+#### Keyboard shortcuts
+
+You may want to setup keyboard shortcuts for undo & redo.
+
+This could be done like so, for ctrl+z (undo) & ctrl+y (redo)
+```js
+document.addEventListener('keydown', function (e) {
+    if (e.ctrlKey || e.metaKey) { // support either ctrl (win & linux) or cmd (mac)
+        if (e.key == 'y' || (e.key == 'Z' && e.shiftKey)) {
+            state.redo();
+        } else if (e.key == 'z') {
+            state.undo();
+        }
+    }
+});
+```
+
+#### Debounce
+Depending on how you're saving data, if it's user based such as on input, you may want to use this with a debounce function to not save constantly, [find out more here](https://davidwalsh.name/javascript-debounce-function) or here's a package for [debounce on npm](https://www.npmjs.com/package/debounce).
 
 -----------------------
 
