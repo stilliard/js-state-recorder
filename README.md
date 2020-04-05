@@ -1,4 +1,4 @@
-# JS StateRewind
+# JS StateRewind [![Build Status](https://travis-ci.org/stilliard/js-state-rewind.svg?branch=master)](https://travis-ci.org/stilliard/js-state-rewind)
 
 Simple state management with the ability to undo, redo & squash history.
 
