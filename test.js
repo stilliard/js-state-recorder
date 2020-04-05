@@ -147,3 +147,21 @@ test('squash-example', t => {
     ]);
 
 });
+
+test('change-detection', t => {
+
+    t.plan(3);
+
+    const state = new StateRewind;
+
+    // listen for changes
+    state.onChange(function (value) {
+        t.pass();
+    });
+
+    // trigger 3 differnt types of changes
+    state.set('test');
+    state.undo();
+    state.redo();
+
+})

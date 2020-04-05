@@ -1,7 +1,8 @@
 
 const StateRewind = function (options) {
     let history = [],
-        changeIndex = -1;
+        changeIndex = -1,
+        onChangeCallback;
 
     // default options
     options = Object.assign({
@@ -39,6 +40,13 @@ const StateRewind = function (options) {
         }
     };
 
+    // runs any provided callback after any state change (set,exec,undo,redo)
+    const onChangeHandler = function () {
+        if (typeof onChangeCallback == 'function') {
+            onChangeCallback();
+        }
+    };
+
     // public methods
     return {
 
@@ -55,6 +63,7 @@ const StateRewind = function (options) {
             history.length = changeIndex + 1; // reset the length each time to wipe any redo history
             history.push({change, forward, backward});
             changeIndex++;
+            onChangeHandler();
             return this;
         },
 
@@ -71,6 +80,7 @@ const StateRewind = function (options) {
                 history[changeIndex].backward();
             }
             changeIndex--;
+            onChangeHandler();
             return this;
         },
 
@@ -87,6 +97,7 @@ const StateRewind = function (options) {
             if (typeof history[changeIndex].forward == 'function') {
                 history[changeIndex].forward();
             }
+            onChangeHandler();
             return this;
         },
 
@@ -118,6 +129,11 @@ const StateRewind = function (options) {
             const last = history.pop();
             history = [last].reduce(squashReducer(compare, modify, history.length), history);
             return this;
+        },
+
+        // setup an on change handler callback
+        onChange(callback) {
+            onChangeCallback = callback;
         },
 
     };

@@ -90,6 +90,11 @@ state.squashLast(function (prev, next) {
 });
 ```
 
+Optionally listen in for changes to the state:
+```js
+state.onChange(function () { ... });
+```
+
 -----------------------
 
 ### Tips
@@ -122,6 +127,24 @@ Almost all functions are chainable (except get, getAll, canUndo and canRedo).
 E.g.
 ```js
 state.set(3).set(5).undo().get()
+```
+
+#### Change events
+
+You may want to hook into the change event of the state, we expose a onChange() function for this.
+
+This is especially useful for setting up undo and redo buttons, e.g.
+```html
+<button id="undo-btn" disabled>Undo</button>
+<button id="redo-btn" disabled>Redo</button>
+```
+```js
+let $undoBtn = document.querySelector('#undo-btn');
+let $redoBtn = document.querySelector('#redo-btn');
+state.onChange(function () {
+    $undoBtn.setAttribute('disabled', ! state.canUndo());
+    $redoBtn.setAttribute('disabled', ! state.canRedo());
+});
 ```
 
 -----------------------
