@@ -62,6 +62,13 @@ Get all recorded state changes
 state.getAll();
 ```
 
+Optionally listen in for changes to the state:
+```js
+state.onChange(function () { ... });
+```
+
+### Editing history
+
 Squash history, e.g. to remove duplicates or squash down similar objects such as changes to text, if the same elements text changes multiple times you might want to squash that down to just the latest change
 ```js
 state.squash(function (prev, next) {
@@ -90,9 +97,14 @@ state.squashLast(function (prev, next) {
 });
 ```
 
-Optionally listen in for changes to the state:
+Remove specific entries from the history.
 ```js
-state.onChange(function () { ... });
+state.removeIndex(2); // index => starting at 0
+```
+
+Clear/reset all history.
+```js
+state.clear();
 ```
 
 -----------------------

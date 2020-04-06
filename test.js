@@ -168,7 +168,7 @@ test('change-detection', t => {
 
 test('remove-index-example', t => {
 
-    t.plan(4);
+    t.plan(7);
 
     const state = new StateRewind;
     t.deepEqual(state.getAll(), []);
@@ -184,5 +184,11 @@ test('remove-index-example', t => {
     state.removeIndex(1);
 
     t.deepEqual(state.getAll(), [111, 333]);
+
+    state.clear(); // remove all from history
+
+    t.deepEqual(state.getAll(), []);
+    t.false(state.canUndo());
+    t.false(state.canRedo());
 
 });

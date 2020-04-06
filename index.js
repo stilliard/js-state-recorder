@@ -137,6 +137,14 @@ const StateRewind = function (options) {
             return this;
         },
 
+        // clear all history
+        clear() {
+            // loop index in reverse order
+            Object.keys(history).reverse().forEach(index => {
+              this.removeIndex(index, index <= changeIndex); // remove each, but only run callbacks to the ones not already undone
+          });
+        },
+
         // You may want to squash down the history based on a comparison callback, allowing you to filter out repeated similar changes
         squash(compare, modify) {
             log('squash');
