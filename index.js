@@ -112,7 +112,7 @@ const StateRewind = function (options) {
         getAll() {
             if (changeIndex == -1) {
                 log('no changes');
-                return;
+                return [];
             }
             return history.slice(0, changeIndex + 1).map(_ => _.change); // slice to ignore redos
         },
