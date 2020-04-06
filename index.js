@@ -121,6 +121,7 @@ const StateRewind = function (options) {
         squash(compare, modify) {
             log('squash');
             history = history.reduce(squashReducer(compare, modify), []);
+            onChangeHandler();
             return this;
         },
 
@@ -128,6 +129,7 @@ const StateRewind = function (options) {
         squashLast(compare, modify) {
             const last = history.pop();
             history = [last].reduce(squashReducer(compare, modify, history.length), history);
+            onChangeHandler();
             return this;
         },
 
