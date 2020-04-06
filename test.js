@@ -164,4 +164,25 @@ test('change-detection', t => {
     state.undo();
     state.redo();
 
-})
+});
+
+test('remove-index-example', t => {
+
+    t.plan(4);
+
+    const state = new StateRewind;
+    t.deepEqual(state.getAll(), []);
+
+    state.set(111);
+    state.set(222, function () {}, function () {
+        t.pass();
+    });
+    state.set(333);
+
+    t.deepEqual(state.getAll(), [111, 222, 333]);
+
+    state.removeIndex(1);
+
+    t.deepEqual(state.getAll(), [111, 333]);
+
+});

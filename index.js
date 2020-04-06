@@ -117,6 +117,26 @@ const StateRewind = function (options) {
             return history.slice(0, changeIndex + 1).map(_ => _.change); // slice to ignore redos
         },
 
+        // remove specific entry from history based on index
+        removeIndex(index, runCallback = true) {
+            log('removeIndex', index);
+            if (typeof history[index] == undefined) {
+                log('not found');
+                return this;
+            }
+            // call any backward func
+            if (runCallback && typeof history[index].backward == 'function') {
+                history[index].backward();
+            }
+            // remove it
+            history.splice(index, 1);
+            if (index <= changeIndex) { // adjust the change index to match the meet the new order
+                changeIndex--;
+            }
+            onChangeHandler();
+            return this;
+        },
+
         // You may want to squash down the history based on a comparison callback, allowing you to filter out repeated similar changes
         squash(compare, modify) {
             log('squash');
@@ -132,6 +152,8 @@ const StateRewind = function (options) {
             onChangeHandler();
             return this;
         },
+
+        // TODO: some sort of squashAny() or prune() or similar name, letting you squash out of sequence order, useful for unique checks etc., would probably need to be passed each item in looped order with it's index as the 2nd param maybe and then a 3nd param of all items to compare against, need to review this idea
 
         // setup an on change handler callback
         onChange(callback) {
