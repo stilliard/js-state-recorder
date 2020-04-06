@@ -213,3 +213,47 @@ test('load-state-example', t => {
     t.deepEqual(state.getAll(), ['a', 'b']);
 
 });
+
+test('initial-state-example', t => {
+
+    let state;
+
+    // check initial states
+    state = new StateRewind;
+    t.is(state.get(), undefined);
+    t.deepEqual(state.getAll(), []);
+
+    // changed initial states
+    state = new StateRewind({
+        initialState: { text: "hello" },
+    });
+    t.deepEqual(state.get(), { text: "hello" });
+    t.deepEqual(state.getAll(), [{ text: "hello" }]);
+
+    // first change
+    state.set({ text: "ok" });
+    t.deepEqual(state.get(), { text: "ok" });
+    t.deepEqual(state.getAll(), [{ text: "hello" }, { text: "ok" }]);
+
+    // second change
+    state.set({ text: "this is interesting" });
+    t.deepEqual(state.get(), { text: "this is interesting" });
+    t.deepEqual(state.getAll(), [{ text: "hello" }, { text: "ok" }, { text: "this is interesting"}]);
+
+    // undo second change
+    state.undo();
+    t.deepEqual(state.get(), { text: "ok" });
+    t.deepEqual(state.getAll(), [{ text: "hello" }, { text: "ok" }]);
+
+    // undo first change
+    state.undo();
+    t.deepEqual(state.get(), { text: "hello" });
+    t.deepEqual(state.getAll(), [{ text: "hello" }]);
+
+    // attempt further rollback
+    t.false(state.canUndo());
+    state.undo();
+    t.deepEqual(state.get(), { text: "hello" });
+    t.deepEqual(state.getAll(), [{ text: "hello" }]);
+
+});

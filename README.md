@@ -2,7 +2,7 @@
 
 Simple state management with the ability to undo, redo & squash history.
 
-Want to skip to a full working example? https://jsfiddle.net/4a9dup0w/48
+Want to skip to a full working example? https://jsfiddle.net/p4rebqw2/5/
 
 -----------------------
 
@@ -143,6 +143,11 @@ state.setDefaultForwardBackwardCallback(function (direction, change) { ... });
 state.load([{ text: "x" }, { text: "y" }], { exec: true });
 ```
 
+### Initial locked states
+
+You can also start the state with an initial value. By default it starts as `undefined` but you can set `initialState` as an option when creating the `StateRewind` instance. This lets you have a default state available via get() that cannot be undone and will always show at the start of the getAll() array.
+
+See the `test.js` file for a unit test showing this in use & many other example uses.
 
 -----------------------
 

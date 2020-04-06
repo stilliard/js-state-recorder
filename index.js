@@ -7,7 +7,8 @@ const StateRewind = function (options) {
 
     // default options
     options = Object.assign({
-        log: false
+        log: false,
+        initialState: undefined,
     }, options || {});
 
     // super simple logging
@@ -116,7 +117,7 @@ const StateRewind = function (options) {
         get() {
             if (changeIndex == -1) {
                 log('no changes');
-                return;
+                return options.initialState;
             }
             return history[changeIndex].change;
         },
@@ -124,9 +125,14 @@ const StateRewind = function (options) {
         getAll() {
             if (changeIndex == -1) {
                 log('no changes');
-                return [];
+                return typeof options.initialState == 'undefined' ? [] : [options.initialState];
             }
-            return history.slice(0, changeIndex + 1).map(_ => _.change); // slice to ignore redos
+            let all = history.slice(0, changeIndex + 1).map(_ => _.change); // slice to ignore redos
+            // append any initial locked state?
+            if (typeof options.initialState != 'undefined') {
+                all.unshift(options.initialState);
+            }
+            return all;
         },
 
         // remove specific entry from history based on index
