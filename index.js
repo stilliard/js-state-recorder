@@ -2,7 +2,8 @@
 const StateRewind = function (options) {
     let history = [],
         changeIndex = -1,
-        onChangeCallback;
+        onChangeCallback,
+        defaultForwardBackwardCallback;
 
     // default options
     options = Object.assign({
@@ -47,6 +48,9 @@ const StateRewind = function (options) {
         }
     };
 
+    // initial log to say it's all up and running
+    log('init', options);
+
     // public methods
     return {
 
@@ -54,7 +58,11 @@ const StateRewind = function (options) {
         exec(change, forward, backward) {
             this.set(change, forward, backward);
             log('exec');
-            forward();
+            if (typeof forward == 'function') {
+                forward();
+            } else if (typeof defaultForwardBackwardCallback == 'function') {
+                defaultForwardBackwardCallback('forward', change);
+            }
             return this;
         },
 
@@ -78,6 +86,8 @@ const StateRewind = function (options) {
             log('undo');
             if (typeof history[changeIndex].backward == 'function') {
                 history[changeIndex].backward();
+            } else if (typeof defaultForwardBackwardCallback == 'function') {
+                defaultForwardBackwardCallback('backward', this.get());
             }
             changeIndex--;
             onChangeHandler();
@@ -96,6 +106,8 @@ const StateRewind = function (options) {
             changeIndex++;
             if (typeof history[changeIndex].forward == 'function') {
                 history[changeIndex].forward();
+            } else if (typeof defaultForwardBackwardCallback == 'function') {
+                defaultForwardBackwardCallback('forward', this.get());
             }
             onChangeHandler();
             return this;
@@ -125,8 +137,12 @@ const StateRewind = function (options) {
                 return this;
             }
             // call any backward func
-            if (runCallback && typeof history[index].backward == 'function') {
-                history[index].backward();
+            if (runCallback) {
+                if (typeof history[index].backward == 'function') {
+                    history[index].backward();
+                } else if (typeof defaultForwardBackwardCallback == 'function') {
+                    defaultForwardBackwardCallback('backward', history[index].change);
+                }
             }
             // remove it
             history.splice(index, 1);
@@ -139,6 +155,7 @@ const StateRewind = function (options) {
 
         // clear all history
         clear() {
+            log('clear');
             // loop index in reverse order
             Object.keys(history).reverse().forEach(index => {
               this.removeIndex(index, index <= changeIndex); // remove each, but only run callbacks to the ones not already undone
@@ -155,6 +172,7 @@ const StateRewind = function (options) {
 
         // Rather than squashing the enitre history, you may want to selectivly run this against the latest & previous set values only
         squashLast(compare, modify) {
+            log('squashLast');
             const last = history.pop();
             history = [last].reduce(squashReducer(compare, modify, history.length), history);
             onChangeHandler();
@@ -165,7 +183,28 @@ const StateRewind = function (options) {
 
         // setup an on change handler callback
         onChange(callback) {
+            log('onChangeCallback set up');
             onChangeCallback = callback;
+        },
+
+        // default forward/backward functions for exec/undo/redo when none passed
+        setDefaultForwardBackwardCallback(callback) {
+            log('defaultForwardBackwardCallback set up');
+            defaultForwardBackwardCallback = callback;
+        },
+
+        // load in stored history
+        load(data, options) {
+
+            // default options
+            options = Object.assign({
+                exec: false, // run exec on each change record to call the defaultForwardBackwardCallback
+            }, options || {});
+            log('load data', options);
+
+            data.forEach(change => {
+                this[options.exec ? 'exec' : 'set'](change);
+            });
         },
 
     };

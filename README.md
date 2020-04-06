@@ -2,6 +2,10 @@
 
 Simple state management with the ability to undo, redo & squash history.
 
+Want to skip to a full working example? https://jsfiddle.net/4a9dup0w/48
+
+-----------------------
+
 ## Install
 
 ```sh
@@ -62,10 +66,27 @@ Get all recorded state changes
 state.getAll();
 ```
 
+### Callbacks
+
 Optionally listen in for changes to the state:
 ```js
 state.onChange(function () { ... });
 ```
+
+Each set/exec can pass a forward and backward callback e.g. to handle the changes visually etc.
+
+You can also set a default function that's given a direction of either forward or backward and the change where you can instruct how it should handle this.
+e.g.
+```js
+state.setDefaultForwardBackwardCallback(function (direction, change) {
+    if (direction == 'forward') {
+        // do/redo it (e.g. on exec() or redo() or initial load() calls)
+    } else if (direction == 'backward') {
+        // undo it (e.g. on undo() calls)
+    }
+});
+```
+
 
 ### Editing history
 
@@ -106,6 +127,22 @@ Clear/reset all history.
 ```js
 state.clear();
 ```
+
+### Starting from stored data
+
+You can load in initial data with the load() command:
+```js
+state.load(data);
+```
+
+This can be used in combination with setDefaultForwardBackwardCallback to have it auto run the callbacks such as visually changing the page to adapt to the loaded history.
+
+```js
+state.setDefaultForwardBackwardCallback(function (direction, change) { ... });
+
+state.load([{ text: "x" }, { text: "y" }], { exec: true });
+```
+
 
 -----------------------
 

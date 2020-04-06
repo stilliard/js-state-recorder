@@ -192,3 +192,24 @@ test('remove-index-example', t => {
     t.false(state.canRedo());
 
 });
+
+test('load-state-example', t => {
+
+    t.plan(4);
+
+    const state = new StateRewind;
+    t.deepEqual(state.getAll(), []);
+
+    state.setDefaultForwardBackwardCallback(function (direction, change) {
+        if (change == 'a') {
+            t.pass();
+        } else {
+            t.is(change, 'b');
+        }
+    });
+
+    state.load(['a', 'b'], { exec: true });
+
+    t.deepEqual(state.getAll(), ['a', 'b']);
+
+});
