@@ -265,3 +265,15 @@ state.getAll(); // should only show first and last due to the `squashLast` repla
 ```sh
 npm test
 ```
+
+### Publish new version
+
+Update the `package.json`'s `version`, commit, push and then:
+```sh
+npm publish
+```
+
+### Contributing
+
+Please run the tests locally and add new tests for new features/options added.
+Thank you.
