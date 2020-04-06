@@ -2,7 +2,7 @@
 
 Simple state management with the ability to undo, redo & squash history.
 
-Want to skip to a full working example? https://jsfiddle.net/p4rebqw2/5/
+Want to skip to a full working example? https://jsfiddle.net/p4rebqw2/15/
 
 -----------------------
 

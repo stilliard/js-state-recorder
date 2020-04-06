@@ -1,6 +1,6 @@
 {
   "name": "state-rewind",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "A simple way to manage state with the ability to undo & redo actions & squash down history where needed",
   "main": "index.js",
   "scripts": {
